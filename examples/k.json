@@ -1,0 +1,79 @@
+{
+  "event": "patch",
+  "message_type": 1,
+  "seq_id": 119686,
+  "mutation_token": "6774102358088209614",
+  "realtime": true,
+  "message": {
+    "path": "/direct_v2/threads/340282366841710300949128131685472224060/items/29792817257939707502907041186316288",
+    "op": "add",
+    "thread_id": "340282366841710300949128131685472224060",
+    "item_id": "29792817257939707502907041186316288",
+    "user_id": 38081432117,
+    "timestamp": 1615071859776093,
+    "item_type": "media_share",
+    "media_share": {
+      "taken_at": 1614504814,
+      "pk": 2518971414850392600,
+      "id": "2518971414850392492_40387454742",
+      "device_timestamp": 1614504791913697,
+      "media_type": 1,
+      "code": "CL1LyfdhVGs",
+      "client_cache_key": "MjUxODk3MTQxNDg1MDM5MjQ5Mg==.2",
+      "filter_type": 0,
+      "user": {
+        "pk": 40387454742,
+        "username": "pretty_portrait_worldd",
+        "full_name": "pretty_portrait_worldd",
+        "is_private": false,
+        "profile_pic_url": "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-19/s150x150/117826101_175379900714037_8158646177454559707_n.jpg?tp=1&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_ohc=oAPw_dhQZ8QAX8vUGP5&oh=1ac41632b5cf743c0f0a028cf92673d1&oe=606CA343",
+        "profile_pic_id": "2380039892999992133_40387454742",
+        "friendship_status": {
+          "following": false,
+          "outgoing_request": false,
+          "is_bestie": false,
+          "is_restricted": false
+        },
+        "has_anonymous_profile_picture": false,
+        "is_unpublished": false,
+        "is_favorite": false,
+        "latest_reel_media": 1615052495,
+        "account_badges": []
+      },
+      "can_viewer_reshare": true,
+      "caption_is_edited": false,
+      "like_and_view_counts_disabled": false,
+      "is_paid_partnership": false,
+      "comment_likes_enabled": false,
+      "comment_threading_enabled": true,
+      "has_more_comments": false,
+      "max_num_visible_preview_comments": 3,
+      "can_view_more_preview_comic_id": "2380039892999992133_40387454742",
+      "friendship_status": {
+        "following": false,
+        "outgoing_request": false,
+        "is_bestie": false,
+        "is_restricted": false
+      },
+      "has_anonymous_profile_picture": false,
+      "is_unpublished": false,
+      "is_favorite": false,
+      "latest_reel_media": 1615052495,
+      "account_badges": []
+    },
+    "is_covered": false,
+    "media_id": 2518971414850392600,
+    "private_reply_status": 0
+  },
+  "can_viewer_save": true,
+  "organic_tracking_token": "eyJ2ZXJzaW9uIjo1LCJwYXlsb2FkIjp7ImlzX2FuYWx5dGljc190cmFja2VkIjp0cnVlLCJ1dWlkIjoiYmY4NTJlYjY3M2Y5NDkwN2I3NTdjZmY4NTI5NjY0NmQyNTE4OTcxNDE0ODUwMzkyNDkyIiwic2VydmVyX3Rva2VuIjoiMTYxNTA3MTg1OTk0NnwyNTE4OTcxNDE0ODUwMzkyNDkyfDMwMjk5ODI0MjQ3fGY3NDMxMTUzZTg5MjUyYTdiODg2MjUzZGEwZmFiMTNkOTQxY2M2ZjQyNzY2MWU5YTBhNDFlZjA0MTFhYWM0NzEifSwic2lnbmF0dXJlIjoiIn0=",
+  "sharing_friction_info": {
+    "should_have_sharing_friction": false,
+    "bloks_app_url": null
+  },
+  "is_in_profile_grid": false,
+  "profile_grid_control_enabled": false,
+  "deleted_reason": 0,
+  "integrity_review_decision": "pending"
+}
+

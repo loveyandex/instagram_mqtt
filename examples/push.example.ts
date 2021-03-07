@@ -1,13 +1,13 @@
-import { IgApiClientExt, IgApiClientFbns, withFbns } from '../src';
-import { IgApiClient } from 'instagram-private-api';
-import { promisify } from 'util';
-import { writeFile, readFile, exists } from 'fs';
+import {IgApiClientExt, IgApiClientFbns, withFbns} from '../src';
+import {IgApiClient} from 'instagram-private-api';
+import {promisify} from 'util';
+import {writeFile, readFile, exists} from 'fs';
 
 const writeFileAsync = promisify(writeFile);
 const readFileAsync = promisify(readFile);
 const existsAsync = promisify(exists);
 
-const {IG_USERNAME = '', IG_PASSWORD = ''} = process.env;
+const {IG_USERNAME = 'adidasberan', IG_PASSWORD = 'godisgreat19'} = process.env;
 
 (async () => {
     const ig: IgApiClientFbns = withFbns(new IgApiClient());
@@ -45,8 +45,9 @@ const {IG_USERNAME = '', IG_PASSWORD = ''} = process.env;
     // await ig.fbns.connect({socksOptions: {host: '...', port: 12345, type: 4}});
 })();
 
+
 async function saveState(ig: IgApiClientExt) {
-    return writeFileAsync('state.json', await ig.exportState(), { encoding: 'utf8' });
+    return writeFileAsync('state.json', await ig.exportState(), {encoding: 'utf8'});
 }
 
 async function readState(ig: IgApiClientExt) {

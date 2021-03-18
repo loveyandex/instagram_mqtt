@@ -1,12 +1,17 @@
+import fs = require('fs');
+
 import WebSocket = require('ws')
 import {IgApiClientExt, IgApiClientFbns, withFbns, withFbnsAndRealtime} from '../src';
 import {IgApiClient} from 'instagram-private-api';
 import {promisify} from 'util';
 import {writeFile, readFile, exists} from 'fs';
 
-import {IgApiClientRealtime, withRealtime} from '../src';
 import {GraphQLSubscriptions} from '../src/realtime/subscriptions';
 import {SkywalkerSubscriptions} from '../src/realtime/subscriptions';
+// @ts-ignore
+import PatchEvent from './models/PatchEvent';
+// @ts-ignore
+import {LINK, Media, MediaShare, TEXT} from './models/MessageTypes';
 
 const writeFileAsync = promisify(writeFile);
 const readFileAsync = promisify(readFile);
@@ -14,9 +19,10 @@ const existsAsync = promisify(exists);
 
 // const { IG_USERNAME = 'adidasberan'/**id 38081432117 */, IG_PASSWORD = 'godisgreat19' } = process.env;
 const {IG_USERNAME = 'ehsin.orig'/**id 30299824247  */, IG_PASSWORD = 'godisgreat18'} = process.env;
+//"presence_event":{"user_id":"6668756262",???
+//"   payload: '{"presence_event":{"user_id":"44346720032","is_active":true,"last_activity_at_ms":"1615229451706","in_threads":null}}',
 
-
-const wss = new WebSocket.Server({port: 8080});
+const wss = new WebSocket.Server({port: 8081});
 wss.on('connection', function connection(ws) {
 
 
@@ -69,7 +75,11 @@ wss.on('connection', function connection(ws) {
 
 
     // whenever something gets sent and has no event, this is called
-    ig.realtime.on('receive', (topic, messages) => console.log('receive', topic, messages));
+    ig.realtime.on('receive', (topic, messages) => {
+            console.log('receive', topic, '\n', messages);
+            console.log('receive ', topic, '\n', (JSON.stringify(messages)));
+        }
+    );
 
     // this is called with a wrapper use {message} to only get the "actual" message from the wrapper
     ig.realtime.on('message', logEvent('messageWrapper'));
@@ -145,5 +155,34 @@ async function loginToInstagram(ig: IgApiClientExt) {
  * @returns {(data) => void}
  */
 function logEvent(name: string) {
-    return (data: any) => console.log('god ', name, JSON.stringify(data));
+    return (data: any) => {
+
+        const patch = <PatchEvent>data;
+
+        if (patch.event == 'patch') {
+            if (patch.message.item_type == LINK) {
+                const data0 = JSON.stringify(data);
+                fs.writeFileSync('link.json', data0);
+            } else if (patch.message.item_type == MediaShare) {
+
+                const data0 = JSON.stringify(data);
+                fs.writeFileSync(`${MediaShare}.json`, data0);
+            } else if (patch.message.item_type == TEXT) {
+
+                const data0 = JSON.stringify(data);
+                fs.writeFileSync('text.json', data0);
+            } else if (patch.message.item_type == Media) {
+
+                const data0 = JSON.stringify(data);
+                fs.writeFileSync('media.json', data0);
+            }
+
+        }
+
+        console.log('god ', name, JSON.parse(JSON.stringify(data)));
+        console.log('mod ', name, (JSON.stringify(data)));
+
+    };
+
+
 }

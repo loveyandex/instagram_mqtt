@@ -34,6 +34,7 @@
     "eventemitter3": "^4.0.4",
     "express": "^4.17.1",
     "instagram-private-api": "^1.41.0",
+    "microtime": "^3.0.0",
     "mongoose": "^5.11.18",
     "mqtts": "^1.0.0",
     "socks": "^2.5.0",

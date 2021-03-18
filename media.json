@@ -1,0 +1,63 @@
+{
+  "event": "patch",
+  "message_type": 1,
+  "seq_id": 120364,
+  "mutation_token": "6776157283106421194",
+  "realtime": true,
+  "message": {
+    "path": "/direct_v2/threads/340282366841710300949128131685472224060/items/29801854973612123762342226359746560",
+    "op": "add",
+    "thread_id": "340282366841710300949128131685472224060",
+    "item_id": "29801854973612123762342226359746560",
+    "user_id": 38081432117,
+    "timestamp": 1615561795324410,
+    "item_type": "media",
+    "media": {
+      "id": 2527838013955190300,
+      "image_versions2": {
+        "candidates": [
+          {
+            "width": 640,
+            "height": 360,
+            "url": "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-15/e35/160046004_825444695071751_6338320702498266855_n.jpg?tp=1&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_cat=111&_nc_ohc=mc42ICqJoWYAX_-AsZq&oh=a903286a4c5fa92fd91ffed9aa46a3cb&oe=607431E7&ig_cache_key=MjUyNzgzODAxMzk1NTE5MDI0Ng%3D%3D.2",
+            "scans_profile": "e35",
+            "estimated_scans_sizes": [
+              3154,
+              6309,
+              9463,
+              12618,
+              15772,
+              19037,
+              23046,
+              25666,
+              28391
+            ]
+          },
+          {
+            "width": 360,
+            "height": 202,
+            "url": "https://scontent-vie1-1.cdninstagram.com/v/t51.2885-15/e35/s360x360/160046004_825444695071751_6338320702498266855_n.jpg?tp=1&_nc_ht=scontent-vie1-1.cdninstagram.com&_nc_cat=111&_nc_ohc=mc42ICqJoWYAX_-AsZq&oh=7bbedc260e188ff48c399503550ecee6&oe=6076B475&ig_cache_key=MjUyNzgzODAxMzk1NTE5MDI0Ng%3D%3D.2",
+            "scans_profile": "e35",
+            "estimated_scans_sizes": [
+              1473,
+              2947,
+              4421,
+              5895,
+              7368,
+              9199,
+              118806,
+              13264,
+              13264
+            ]
+          }
+        ]
+      },
+      "original_width": 640,
+      "original_height": 360,
+      "media_type": 1
+    },
+    "client_context": "6776157283106421194",
+    "show_forward_attribution": false,
+    "is_shh_mode": false
+  }
+}

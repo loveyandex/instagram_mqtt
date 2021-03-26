@@ -14,7 +14,7 @@ const existsAsync = promisify(exists);
 
 
 
-const {IG_USERNAME = 'adidasberan', IG_PASSWORD = 'godisgreat19'} = process.env;
+const {IG_USERNAME = 'adidasberan99', IG_PASSWORD = 'godisgreat17'} = process.env;
 
 
 (async () => { 

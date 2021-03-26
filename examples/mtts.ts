@@ -1,39 +1,42 @@
 import fs = require('fs');
 
 import WebSocket = require('ws')
-import {IgApiClientExt, IgApiClientFbns, withFbns, withFbnsAndRealtime} from '../src';
-import {IgApiClient} from 'instagram-private-api';
-import {promisify} from 'util';
-import {writeFile, readFile, exists} from 'fs';
+import { IgApiClientExt, IgApiClientFbns, IgApiClientMQTT, withFbns, withFbnsAndRealtime } from '../src';
+import { IgApiClient } from 'instagram-private-api';
+import { promisify } from 'util';
+import { writeFile, readFile, exists } from 'fs';
 
-import {GraphQLSubscriptions} from '../src/realtime/subscriptions';
-import {SkywalkerSubscriptions} from '../src/realtime/subscriptions';
+import { GraphQLSubscriptions } from '../src/realtime/subscriptions';
+import { SkywalkerSubscriptions } from '../src/realtime/subscriptions';
 // @ts-ignore
 import PatchEvent from './models/PatchEvent';
 // @ts-ignore
-import {LINK, Media, MediaShare, TEXT} from './models/MessageTypes';
+import { LINK, Media, MediaShare, TEXT } from './models/MessageTypes';
+
+// @ts-ignore
+import MediaShareEvent from './models/MediaShareEvent';
 
 const writeFileAsync = promisify(writeFile);
 const readFileAsync = promisify(readFile);
 const existsAsync = promisify(exists);
 
 // const { IG_USERNAME = 'adidasberan'/**id 38081432117 */, IG_PASSWORD = 'godisgreat19' } = process.env;
-const {IG_USERNAME = 'ehsin.orig'/**id 30299824247  */, IG_PASSWORD = 'godisgreat18'} = process.env;
+const { IG_USERNAME = 'adidasberan99'/**id 30299824247  */, IG_PASSWORD = 'godisgreat17' } = process.env;
 //"presence_event":{"user_id":"6668756262",???
 //"   payload: '{"presence_event":{"user_id":"44346720032","is_active":true,"last_activity_at_ms":"1615229451706","in_threads":null}}',
 
-const wss = new WebSocket.Server({port: 8081});
-wss.on('connection', function connection(ws) {
+// const wss = new WebSocket.Server({port: 8081});
+// wss.on('connection', function connection(ws) {
 
 
-    ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
-    });
+//     ws.on('message', function incoming(message) {
+//         console.log('received: %s', message);
+//     });
 
-    ws.send(JSON.stringify('trade'));
+//     ws.send(JSON.stringify('trade'));
 
 
-});
+// });
 
 
 (async () => {
@@ -52,22 +55,22 @@ wss.on('connection', function connection(ws) {
     await loginToInstagram(ig);
 
     // you received a notification
-    ig.fbns.on('push', logEvent('push'));
+    ig.fbns.on('push', logEvent('push', ig));
 
     // the client received auth data
     // the listener has to be added before connecting
     ig.fbns.on('auth', async auth => {
         // logs the auth
-        logEvent('auth')(auth);
+        logEvent('auth', ig)(auth);
 
         //saves the auth
         await saveState(ig);
     });
 
     // 'error' is emitted whenever the client experiences a fatal error
-    ig.fbns.on('error', logEvent('error'));
+    ig.fbns.on('error', logEvent('error', ig));
     // 'warning' is emitted whenever the client errors but the connection isn't affected
-    ig.fbns.on('warning', logEvent('warning'));
+    ig.fbns.on('warning', logEvent('warning', ig));
 
     // this sends the connect packet to the server and starts the connection
     // the promise will resolve once the client is fully connected (once /push/register/ is received)
@@ -76,22 +79,22 @@ wss.on('connection', function connection(ws) {
 
     // whenever something gets sent and has no event, this is called
     ig.realtime.on('receive', (topic, messages) => {
-            console.log('receive', topic, '\n', messages);
-            console.log('receive ', topic, '\n', (JSON.stringify(messages)));
-        }
+        console.log('receive', topic, '\n', messages);
+        console.log('receive ', topic, '\n', (JSON.stringify(messages)));
+    }
     );
 
     // this is called with a wrapper use {message} to only get the "actual" message from the wrapper
-    ig.realtime.on('message', logEvent('messageWrapper'));
+    ig.realtime.on('message', logEvent('messageWrapper', ig));
 
     // a thread is updated, e.g. admins/members added/removed
-    ig.realtime.on('threadUpdate', logEvent('threadUpdateWrapper'));
+    ig.realtime.on('threadUpdate', logEvent('threadUpdateWrapper', ig));
 
     // other direct messages - no messages
-    ig.realtime.on('direct', logEvent('direct'));
+    ig.realtime.on('direct', logEvent('direct', ig));
 
     // whenever something gets sent to /ig_realtime_sub and has no event, this is called
-    ig.realtime.on('realtimeSub', logEvent('realtimeSub'));
+    ig.realtime.on('realtimeSub', logEvent('realtimeSub', ig));
 
     // whenever the client has a fatal error
     ig.realtime.on('error', console.error);
@@ -133,13 +136,13 @@ wss.on('connection', function connection(ws) {
 })()
 
 async function saveState(ig: IgApiClientExt) {
-    return writeFileAsync('state.json', await ig.exportState(), {encoding: 'utf8'});
+    return writeFileAsync('state.json', await ig.exportState(), { encoding: 'utf8' });
 }
 
 async function readState(ig: IgApiClientExt) {
     if (!await existsAsync('state.json'))
         return;
-    await ig.importState(await readFileAsync('state.json', {encoding: 'utf8'}));
+    await ig.importState(await readFileAsync('state.json', { encoding: 'utf8' }));
 }
 
 async function loginToInstagram(ig: IgApiClientExt) {
@@ -152,10 +155,14 @@ async function loginToInstagram(ig: IgApiClientExt) {
 /**
  * A wrapper function to log to the console
  * @param name
+ * @param ig
  * @returns {(data) => void}
  */
-function logEvent(name: string) {
+function logEvent(name: string, ig: IgApiClient) {
+
     return (data: any) => {
+        console.log('name ig.entity: ' + ig.entity)
+        console.log('nameig.entity.directThread : ' + ig.entity.directThread)
 
         const patch = <PatchEvent>data;
 
@@ -166,7 +173,19 @@ function logEvent(name: string) {
             } else if (patch.message.item_type == MediaShare) {
 
                 const data0 = JSON.stringify(data);
+
+                const mediaShareEvent = <MediaShareEvent>data;
+
                 fs.writeFileSync(`${MediaShare}.json`, data0);
+
+                console.log('mygi.entity ' + (ig.entity.directThread));
+                ig.entity.directThread(mediaShareEvent.message.thread_id)
+                    .broadcastText('در حال پردازش')
+                    .then(value => console.log('vale'+JSON.stringify(value)))
+                    // .catch(reason => console.log('reason'+JSON.stringify(reason)));
+
+
+
             } else if (patch.message.item_type == TEXT) {
 
                 const data0 = JSON.stringify(data);
@@ -179,10 +198,8 @@ function logEvent(name: string) {
 
         }
 
-        console.log('god ', name, JSON.parse(JSON.stringify(data)));
-        console.log('mod ', name, (JSON.stringify(data)));
+        // console.log('god ', name, JSON.parse(JSON.stringify(data)));
+        // console.log('mod ', name, (JSON.stringify(data)));
 
     };
-
-
 }

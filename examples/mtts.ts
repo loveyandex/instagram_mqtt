@@ -11,10 +11,10 @@ import { SkywalkerSubscriptions } from '../src/realtime/subscriptions';
 // @ts-ignore
 import PatchEvent from './models/PatchEvent';
 // @ts-ignore
-import { LINK, Media, MediaShare, TEXT } from './models/MessageTypes';
+import { LINK, Media, MediaShare, ProductShare, TEXT } from './models/MessageTypes';
 
-// @ts-ignore
 import MediaShareEvent from './models/MediaShareEvent';
+import  {ProductShareEvent} from './models/Product';
 
 const writeFileAsync = promisify(writeFile);
 const readFileAsync = promisify(readFile);
@@ -52,10 +52,13 @@ const { IG_USERNAME = 'adidasberan99'/**id 30299824247  */, IG_PASSWORD = 'godis
     await readState(ig);
 
     // this logs the client in
-    await loginToInstagram(ig);
+
+    /* await loginToInstagram(ig); */
 
     // you received a notification
     ig.fbns.on('push', logEvent('push', ig));
+    console.log('usereid ', await ig.user.getIdByUsername(IG_USERNAME))
+
 
     // the client received auth data
     // the listener has to be added before connecting
@@ -146,8 +149,8 @@ async function readState(ig: IgApiClientExt) {
 }
 
 async function loginToInstagram(ig: IgApiClientExt) {
-    ig.request.end$.subscribe(() => saveState(ig));
     await ig.account.login(IG_USERNAME, IG_PASSWORD);
+    ig.request.end$.subscribe(() => saveState(ig));
     console.log('usereid ', await ig.user.getIdByUsername(IG_USERNAME))
 
 }
@@ -181,9 +184,22 @@ function logEvent(name: string, ig: IgApiClient) {
                 console.log('mygi.entity ' + (ig.entity.directThread));
                 ig.entity.directThread(mediaShareEvent.message.thread_id)
                     .broadcastText('در حال پردازش')
-                    .then(value => console.log('vale'+JSON.stringify(value)))
-                    // .catch(reason => console.log('reason'+JSON.stringify(reason)));
+                    .then(value => console.log('vale '+JSON.stringify(value)))
+                    .catch(reason => console.log('reason '+JSON.stringify(reason)));
 
+
+
+            }else if (patch.message.item_type == ProductShare) {
+
+                const data0 = JSON.stringify(data);
+                const  productShareEvent = <ProductShareEvent>data;
+
+                fs.writeFileSync(`${ProductShare}.json`, data0);
+
+                ig.entity.directThread(productShareEvent.message.thread_id)
+                .broadcastText(productShareEvent.message.product_share.product.current_price+'در حال پردازش')
+                .then(value => console.log('vale '+JSON.stringify(value)))
+                .catch(reason => console.log('reason '+JSON.stringify(reason)));
 
 
             } else if (patch.message.item_type == TEXT) {
@@ -198,8 +214,8 @@ function logEvent(name: string, ig: IgApiClient) {
 
         }
 
-        // console.log('god ', name, JSON.parse(JSON.stringify(data)));
-        // console.log('mod ', name, (JSON.stringify(data)));
+        console.log('god ', name, JSON.parse(JSON.stringify(data)));
+        console.log('mod ', name, (JSON.stringify(data)));
 
     };
 }
